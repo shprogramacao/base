@@ -215,19 +215,21 @@ class  BaseController extends Controller
         }
 
         $item = $this->model->find($id);
-        foreach ($allFields as $key => $value) {
-            if (!in_array($key, $item->files)) {
-                continue;
-            }
+        if(isset($item->files)){
+            foreach ($allFields as $key => $value) {
+                if (!in_array($key, $item->files)) {
+                    continue;
+                }
 
-            if (!$value) {
-                continue;
-            }
+                if (!$value) {
+                    continue;
+                }
 
-            try {
-                $path = FileSystemService::uploadBase64File($value, 'clients/' .  $item->id . '/documents', $item[$key]);
-                $allFields[$key] = $path;
-            } catch (\Throwable $th) {
+                try {
+                    $path = FileSystemService::uploadBase64File($value, 'clients/' .  $item->id . '/documents', $item[$key]);
+                    $allFields[$key] = $path;
+                } catch (\Throwable $th) {
+                }
             }
         }
         $item->update($allFields);
